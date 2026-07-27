@@ -126,6 +126,30 @@ table.tl th[scope="row"]{white-space:nowrap; background:transparent; font-varian
 .note{background:var(--noteBg); border:1px solid var(--noteRule); border-radius:4px; padding:.8rem 1rem; margin:1.1rem 0}
 .note h3{margin:0 0 .3rem; font-size:.98rem}
 .note p{margin:0; font-size:.93rem}
+.rechnung{border:1px solid var(--accent); border-radius:4px; padding:.85rem 1rem; margin:1.2rem 0}
+.rechnung h3{margin:0 0 .3rem; font-size:.98rem; color:var(--accent)}
+.rechnung p{margin:0 0 .6rem; font-size:.92rem}
+.rechnung code{font-size:.86rem; background:var(--card); padding:.05rem .25rem; border-radius:2px}
+/* The switcher must be able to shrink. As flex:0 0 auto it could not, so at
+   305px the bar grew past the viewport and the whole page scrolled sideways,
+   which the 320px check caught immediately. */
+.pages{display:flex; gap:.1rem; align-items:center; flex:0 1 auto;
+ min-width:0; overflow-x:auto; scrollbar-width:none}
+.pages::-webkit-scrollbar{display:none}
+.pages a,.pages .here{font-size:.8rem; padding:.2rem .5rem; border-radius:3px;
+ white-space:nowrap; text-decoration:none}
+.pages a{color:var(--accent); border:1px solid transparent}
+.pages a:hover{border-color:var(--rule); background:var(--card)}
+.pages .here{background:var(--accent); color:#fdfdfc; font-weight:600}
+/* Below this width the brand and the switcher say the same thing twice, and only
+   one of them fits. The switcher wins: it names the current page AND offers the
+   other one. */
+@media (max-width:44rem){
+  .brand{display:none}
+  .topbar-inner{padding:0 .7rem; gap:.5rem}
+  .pages a,.pages .here{padding:.2rem .4rem; font-size:.76rem}
+  .stand{font-size:.66rem; padding:.12rem .45rem}
+}
 .warnbar{background:#fbeae5; border:1px solid #d9a294; border-left:4px solid #a8442c;
  border-radius:4px; padding:.75rem 1rem; margin:1rem 0}
 .warnbar p{margin:0; font-size:.93rem}
@@ -159,6 +183,7 @@ footer.foot{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
 <body>
 <div class="topbar"><div class="topbar-inner">
 <span class="brand">Schwangerschaft und die TK</span>
+<nav class="pages" aria-label="Seiten"><span class="here" aria-current="page">Schwangerschaft und TK</span><a href="elterngeld.html">Elterngeld berechnen</a></nav>
 <span class="stand">Stand 27.07.2026</span>
 </div></div>
 <div class="shell">
@@ -373,6 +398,7 @@ footer.foot{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
 <li>Auch das Mutterschaftsgeld ist beitragsfrei.<a class="fn" href="#q-32">[32]</a></li>
 <li>Für das Elterngeld selbst verweist die TK auf das Familienportal des Bundesministeriums für Familie, Senioren, Frauen und Jugend.<a class="fn" href="#q-33">[33]</a></li>
 </ul>
+<div class="note"><h3>Wie hoch das Elterngeld ist, steht auf der zweiten Seite</h3><p>Die Rechenregeln stehen nicht bei der TK, sondern im Gesetz. Sie sind auf der zweiten Seite dieser Sammlung zusammengetragen, mit Prozentsatz, Höchst- und Mindestbetrag, Zuschlägen und dem Weg über die L-Bank: <a href="elterngeld.html">Elterngeld und wie es gerechnet wird</a></p></div>
 <div class="note"><h3>Was diese Seite über die Höhe und Dauer des Elterngeldes nicht sagen kann</h3><p>Auf keiner der sieben ausgewerteten TK-Seiten zu Elterngeld und Elternzeit steht, wie hoch das Elterngeld ist oder wie lange es gezahlt wird. Basiselterngeld, ElterngeldPlus und Partnermonate kommen dort nicht vor. Das ist kein Versehen dieser Seite: es sind Regeln des Bundeselterngeldgesetzes, nicht Leistungen der Krankenkasse, und sie werden von der Elterngeldstelle angewendet. Die TK selbst verweist dafür auf das Familienportal des Bundesministeriums für Familie, Senioren, Frauen und Jugend. Rechnen Sie mit keiner Zahl von dieser Seite, wenn Sie Ihren Elterngeldantrag planen.</p></div>
 </section>
 <section id="fristen">
@@ -534,7 +560,7 @@ footer.foot{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
 <dt>Gravidogramm</dt><dd>Hier finden Sie auch Ihre aktuelle Schwangerschaftswoche (SSW) sowie Information zur Entwicklung Ihres Kindes und Ihrem Gesundheitsstatus.<a class="fn" href="#q-2">[2]</a></dd>
 <dt>Fundusstand</dt><dd>Der Fundusstand gibt an, wie weit sich Ihre Gebärmutter ausgedehnt hat.<a class="fn" href="#q-2">[2]</a></dd>
 </dl></section>
-<section id="quellen"><h2>Quellen</h2><p>40 Seiten der Techniker Krankenkasse, dazu 14 Seiten anderer Anbieter für den Abschnitt über die Praxen vor Ort, abgerufen am 27.07.2026 und als Kopie archiviert. Jede Angabe oben verweist mit ihrer Nummer auf den Eintrag hier. Verlinkt sind nur die TK-Seiten; die übrigen Adressen stehen als Text, damit diese Seite keine Verbindung zu fremden Servern aufbaut.</p><ol class="quellen">
+<section id="quellen"><h2>Quellen</h2><p>40 Seiten der Techniker Krankenkasse, dazu 14 Seiten der Praxen selbst und eines Buchungsportals, abgerufen am 27.07.2026 und als Kopie archiviert. Jede Angabe oben verweist mit ihrer Nummer auf den Eintrag hier. Verlinkt sind nur die TK-Seiten; die übrigen Adressen stehen als Text, damit diese Seite keine Verbindung zu fremden Servern aufbaut.</p><ol class="quellen">
 <li id="q-1">Terminkalender für Schwangere. <span class="meta">Techniker Krankenkasse, <a href="https://www.tk.de/techniker/gesundheit-foerdern/schwangerschaft-und-geburt/schwangerenvorsorge/terminkalender-schwangerschaft-2009466" rel="noreferrer noopener">Seite aufrufen</a>, abgerufen am 27.07.2026.</span></li>
 <li id="q-2">Der Mutterpass. <span class="meta">Techniker Krankenkasse, <a href="https://www.tk.de/techniker/gesundheit-foerdern/schwangerschaft-und-geburt/schwangerenvorsorge/der-mutterpass-2009440" rel="noreferrer noopener">Seite aufrufen</a>, abgerufen am 27.07.2026.</span></li>
 <li id="q-3">Wie viele Ultraschall-Untersuchungen bekomme ich in der Schwangerschaft bezahlt?. <span class="meta">Techniker Krankenkasse, <a href="https://www.tk.de/techniker/versicherung/tk-leistungen/schwangerschaft-und-familie/leistungen-schwangerschaft-geburt/untersuchungen-leistungen-schwangerschaft/kostenuebernahme-inhalt-ultraschalluntersuchung-schwangerschaft-2007778" rel="noreferrer noopener">Seite aufrufen</a>, abgerufen am 27.07.2026.</span></li>
@@ -592,14 +618,8 @@ footer.foot{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
 </ol></section>
 </main>
 <footer class="foot">
-<p>Diese Seite fasst öffentlich zugängliche Angaben der Techniker Krankenkasse
-zusammen. Sie steht in keiner Verbindung zur TK und gibt deren Angaben nicht
-amtlich wieder. Die Formulierungen sind eigene, kurze Zitate sind als solche
-gekennzeichnet und mit der Quelle verknüpft.</p>
-<p>Der Abschnitt über die Praxen vor Ort stammt nicht von der TK, sondern aus den
-Internetseiten der Praxen selbst und aus einem Buchungsportal. Er steht in keiner
-Verbindung zu den genannten Praxen, ist keine Empfehlung und ersetzt keinen Anruf
-dort. Angaben zur Aufnahme neuer Patientinnen ändern sich kurzfristig.</p>
+<p>Diese Seite fasst öffentlich zugängliche Angaben der Techniker Krankenkasse zusammen. Sie steht in keiner Verbindung zur TK und gibt deren Angaben nicht amtlich wieder. Die Formulierungen sind eigene, kurze Zitate sind als solche gekennzeichnet und mit der Quelle verknüpft.</p>
+<p>Der Abschnitt über die Praxen vor Ort stammt nicht von der TK, sondern aus den Internetseiten der Praxen selbst und aus einem Buchungsportal. Er steht in keiner Verbindung zu den genannten Praxen, ist keine Empfehlung und ersetzt keinen Anruf dort. Angaben zur Aufnahme neuer Patientinnen ändern sich kurzfristig.</p>
 </footer>
 </div>
 </div>

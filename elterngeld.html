@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Elterngeld berechnen: die Regeln des Gesetzes und der Weg über die L-Bank</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzdhM2IyZSIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjYuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmRmZGZjIiBzdHJva2Utd2lkdGg9IjIuNSIvPjwvc3ZnPg==">
+<style>
+:root{
+  --bg:#fdfdfc; --fg:#1c1b19; --muted:#5c5952; --rule:#e0ddd6;
+  --card:#f6f4ef; --accent:#7a3b2e; --noteBg:#fbf3e8; --noteRule:#d9b48f;
+  --bar:#fdfdfcf2;
+  /* One number for the top bar height. Every sticky offset and scroll-margin below
+     is derived from it. Hard-coding them separately went wrong immediately: the bar
+     wrapped to 68px at 320px while the left nav still stuck at 47px, so the nav slid
+     underneath it. The bar is now pinned to this height and cannot wrap. */
+  --barh:2.6rem;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#16151a; --fg:#e9e7e2; --muted:#a5a19a; --rule:#312f36;
+    --card:#1f1e24; --accent:#e0a08c; --noteBg:#241f1a; --noteRule:#6b4a30;
+    --bar:#16151af2;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:1rem/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  overflow-wrap:break-word; hyphens:auto;
+}
+
+/* Top bar. Carries the short title and the Stand badge, so the date stays visible
+   while reading rather than scrolling away with the header. */
+.topbar{position:sticky; top:0; z-index:20; background:var(--bar);
+        -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+        border-bottom:1px solid var(--rule)}
+.topbar-inner{max-width:74rem; margin:0 auto; padding:0 1.2rem; min-height:var(--barh);
+              display:flex; flex-wrap:nowrap; gap:.8rem;
+              align-items:center; justify-content:space-between}
+.brand{font-weight:600; font-size:.97rem; letter-spacing:-.01em;
+       min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.stand{flex:none; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase;
+       color:var(--muted); border:1px solid var(--rule); border-radius:999px;
+       padding:.14rem .6rem; white-space:nowrap}
+
+/* Two columns at width, one below. minmax(0,1fr) rather than 1fr so a wide table
+   can shrink the column instead of forcing the whole grid wider than the viewport. */
+.shell{max-width:74rem; margin:0 auto; padding:0 1.2rem 5rem;
+       display:grid; grid-template-columns:14.5rem minmax(0,1fr); gap:2.6rem}
+
+/* Left navigation. No headings inside it: it sits before the h1 in document order,
+   so a heading here would make the document open at h2 and the outline scan would
+   fail, correctly. The label is a plain div for that reason. */
+.sidenav{position:sticky; top:calc(var(--barh) + 1px); align-self:start;
+         max-height:calc(100vh - var(--barh) - 2rem);
+         overflow-y:auto; padding:1.5rem 0 1rem; border-right:1px solid var(--rule)}
+.navlabel{font-size:.68rem; text-transform:uppercase; letter-spacing:.09em;
+          color:var(--muted); padding:0 0 .55rem .7rem}
+.sidenav ul{list-style:none; margin:0; padding:0}
+.sidenav a{display:block; padding:.3rem .5rem .3rem .7rem; font-size:.875rem;
+           color:var(--muted); text-decoration:none; border-left:2px solid transparent;
+           border-radius:0 3px 3px 0}
+.sidenav a:hover,.sidenav a:focus{color:var(--accent); border-left-color:var(--accent);
+                                  background:var(--card)}
+/* Capped, not stretched to the column. At 1180px the free-running measure reached
+   about 110 characters a line, well past comfortable reading; 50rem keeps it near
+   75. Tables inherit the cap and scroll inside it, which they already handle. */
+.content{padding-top:1.8rem; min-width:0; max-width:50rem}
+
+/* Anchor targets must clear the sticky bars, or a footnote jump lands underneath
+   them and looks like a broken link. */
+section{scroll-margin-top:calc(var(--barh) + 1.1rem)}
+ol.quellen li{scroll-margin-top:calc(var(--barh) + 1.6rem)}
+
+h1{font-size:1.9rem; line-height:1.18; margin:0 0 .6rem}
+h2{font-size:1.3rem; line-height:1.25; margin:2.6rem 0 .5rem; padding-top:.7rem; border-top:1px solid var(--rule)}
+h3{font-size:1.02rem; margin:1.5rem 0 .35rem}
+p{margin:.6rem 0}
+.lead{font-size:1.08rem}
+.disc{background:var(--card); border-left:3px solid var(--accent); padding:.7rem .9rem; margin:1.1rem 0; font-size:.93rem}
+.disc p{margin:.3rem 0}
+section:target > h2{color:var(--accent)}
+
+/* Below 62rem the sidebar becomes one non-wrapping scrollable row under the top
+   bar. Eleven items wrapped turned the sticky area into six rows on a phone,
+   about 40 percent of the viewport, and it stayed there while scrolling. */
+@media (max-width:62rem){
+  .shell{grid-template-columns:minmax(0,1fr); gap:0}
+  .sidenav{position:sticky; top:calc(var(--barh) + 1px); z-index:15; max-height:none; overflow:visible;
+           align-self:auto; border-right:none; border-bottom:1px solid var(--rule);
+           background:var(--bar); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+           margin:0 -1.2rem; padding:.4rem 1.2rem}
+  .navlabel{display:none}
+  .sidenav ul{display:flex; flex-wrap:nowrap; overflow-x:auto; gap:0 1rem; scrollbar-width:none}
+  .sidenav ul::-webkit-scrollbar{display:none}
+  .sidenav a{padding:.15rem 0; white-space:nowrap; border-left:none;
+             border-bottom:1px solid transparent; border-radius:0}
+  .sidenav a:hover,.sidenav a:focus{border-left-color:transparent;
+                                    border-bottom-color:var(--accent); background:none}
+  .content{padding-top:1.4rem}
+  /* Two stacked sticky bars here, not one, so the offset doubles. */
+  section{scroll-margin-top:calc(var(--barh) * 2 + 1.1rem)}
+  ol.quellen li{scroll-margin-top:calc(var(--barh) * 2 + 1.6rem)}
+}
+ul.claims{list-style:none; margin:.7rem 0; padding:0}
+ul.claims li{position:relative; padding-left:1.1rem; margin:.55rem 0}
+ul.claims li::before{content:"\2022"; position:absolute; left:.2rem; color:var(--accent)}
+a{color:var(--accent)}
+a.fn{
+  font-size:.7rem; vertical-align:.42em; text-decoration:none; margin-left:.18rem;
+  color:var(--muted); border-bottom:none; white-space:nowrap;
+}
+a.fn:hover,a.fn:focus{color:var(--accent)}
+a:focus-visible,a.fn:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+.scroller{overflow-x:auto; margin:1rem 0; border:1px solid var(--rule); border-radius:4px}
+table{border-collapse:collapse; width:100%; min-width:30rem; font-size:.93rem}
+caption{text-align:left; font-size:.86rem; color:var(--muted); padding:.6rem .7rem}
+th,td{text-align:left; vertical-align:top; padding:.5rem .7rem; border-top:1px solid var(--rule)}
+th{font-weight:600; background:var(--card)}
+td.beitrag{color:var(--muted); font-style:italic}
+table.tl th[scope="row"]{white-space:nowrap; background:transparent; font-variant-numeric:tabular-nums}
+.note{background:var(--noteBg); border:1px solid var(--noteRule); border-radius:4px; padding:.8rem 1rem; margin:1.1rem 0}
+.note h3{margin:0 0 .3rem; font-size:.98rem}
+.note p{margin:0; font-size:.93rem}
+.rechnung{border:1px solid var(--accent); border-radius:4px; padding:.85rem 1rem; margin:1.2rem 0}
+.rechnung h3{margin:0 0 .3rem; font-size:.98rem; color:var(--accent)}
+.rechnung p{margin:0 0 .6rem; font-size:.92rem}
+.rechnung code{font-size:.86rem; background:var(--card); padding:.05rem .25rem; border-radius:2px}
+/* The switcher must be able to shrink. As flex:0 0 auto it could not, so at
+   305px the bar grew past the viewport and the whole page scrolled sideways,
+   which the 320px check caught immediately. */
+.pages{display:flex; gap:.1rem; align-items:center; flex:0 1 auto;
+ min-width:0; overflow-x:auto; scrollbar-width:none}
+.pages::-webkit-scrollbar{display:none}
+.pages a,.pages .here{font-size:.8rem; padding:.2rem .5rem; border-radius:3px;
+ white-space:nowrap; text-decoration:none}
+.pages a{color:var(--accent); border:1px solid transparent}
+.pages a:hover{border-color:var(--rule); background:var(--card)}
+.pages .here{background:var(--accent); color:#fdfdfc; font-weight:600}
+/* Below this width the brand and the switcher say the same thing twice, and only
+   one of them fits. The switcher wins: it names the current page AND offers the
+   other one. */
+@media (max-width:44rem){
+  .brand{display:none}
+  .topbar-inner{padding:0 .7rem; gap:.5rem}
+  .pages a,.pages .here{padding:.2rem .4rem; font-size:.76rem}
+  .stand{font-size:.66rem; padding:.12rem .45rem}
+}
+.warnbar{background:#fbeae5; border:1px solid #d9a294; border-left:4px solid #a8442c;
+ border-radius:4px; padding:.75rem 1rem; margin:1rem 0}
+.warnbar p{margin:0; font-size:.93rem}
+.warnbar strong{color:#8c3a22}
+table.legende td{vertical-align:top}
+.praxis{border-top:1px solid var(--rule); padding-top:.7rem; margin:1.1rem 0}
+.praxis h4{margin:0 0 .3rem; font-size:1rem}
+.praxis .claims{margin:.25rem 0}
+.gruppe{margin-top:1.6rem}
+.gruppe h3{margin-bottom:.2rem}
+.gruppe .lead{font-size:.95rem; margin:.2rem 0 .5rem}
+dl.gloss{margin:1rem 0}
+dl.gloss dt{font-weight:600; margin-top:.8rem}
+dl.gloss dd{margin:.1rem 0 0; color:var(--fg)}
+ol.quellen{font-size:.89rem; padding-left:1.4rem}
+ol.quellen li{margin:.45rem 0}
+ol.quellen .meta{color:var(--muted)}
+footer.foot{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule); font-size:.85rem; color:var(--muted)}
+@media print{
+  .topbar,.sidenav{display:none}
+  .shell{display:block; max-width:none; padding:0}
+  .content{padding-top:0}
+  body{background:#fff; color:#000; font-size:10.5pt}
+  h2{page-break-after:avoid}
+  .note,tr{page-break-inside:avoid}
+  .scroller{overflow:visible; border:none}
+  table{min-width:0}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+<span class="brand">Elterngeld berechnen</span>
+<nav class="pages" aria-label="Seiten"><a href="index.html">Schwangerschaft und TK</a><span class="here" aria-current="page">Elterngeld berechnen</span></nav>
+<span class="stand">Stand 27.07.2026</span>
+</div></div>
+<div class="shell">
+<aside class="sidenav">
+<div class="navlabel">Abschnitte</div>
+<nav aria-label="Abschnitte"><ul>
+<li><a href="#zustaendig">Wer zahlt</a></li>
+<li><a href="#grundregel">Grundregel</a></li>
+<li><a href="#prozentsatz">Prozentsatz</a></li>
+<li><a href="#varianten">Basis, Plus, Bonus</a></li>
+<li><a href="#zuschlaege">Zuschläge</a></li>
+<li><a href="#grenzen">Grenzen und Anrechnung</a></li>
+<li><a href="#antrag">Antrag</a></li>
+<li><a href="#quellen">Quellen</a></li>
+</ul></nav>
+</aside>
+<div class="content">
+<header class="top">
+<h1>Elterngeld und wie es gerechnet wird</h1>
+<p class="lead">Wie hoch das Elterngeld ist, steht nicht bei der Krankenkasse, sondern im Bundeselterngeld- und Elternzeitgesetz. Diese Seite gibt die Rechenregeln so wieder, wie das Gesetz sie formuliert, und nennt zu jeder Zahl den Paragrafen. Beantragt wird das Elterngeld in Baden-Württemberg bei der L-Bank.</p>
+<div class="disc">
+<p>Keine Rechtsberatung. Verbindlich ist allein der Bescheid der Elterngeldstelle, die den Antrag prüft und dabei Angaben berücksichtigt, die auf dieser Seite gar nicht vorkommen können.</p>
+<p>Stand 27.07.2026. Die Beträge und Grenzen des Elterngeldes sind mehrfach geändert worden, zuletzt für Geburten ab dem 1. April 2025. Maßgeblich ist die Fassung, die zum Geburtstermin gilt.</p>
+</div>
+</header>
+<main>
+<section id="zustaendig">
+<h2>Wer das Elterngeld zahlt, und wer nicht</h2>
+<p>Das Elterngeld ist keine Leistung der Krankenkasse. Wer bei der TK nach der Höhe des Elterngeldes sucht, findet sie dort nicht, und das ist kein Versäumnis der TK: sie ist dafür nicht zuständig. In Baden-Württemberg entscheidet und zahlt die L-Bank.</p>
+<ul class="claims">
+<li>Elterngeld und Elternzeit werden getrennt beantragt: das Elterngeld über die L-Bank, die Elternzeit beim Arbeitgeber.<a class="fn" href="#q-1">[1]</a></li>
+<li>Der Antrag lässt sich vor der Geburt vorbereiten und danach abschließen.<a class="fn" href="#q-1">[1]</a></li>
+</ul>
+<div class="note"><h3>Was die Krankenkasse dennoch beisteuert</h3><p>Die Bescheinigung, die dem Elterngeldantrag beiliegen muss, kommt von der Krankenkasse, nicht von der Elterngeldstelle. Was die TK dazu und zur Versicherung während der Elternzeit sagt, steht auf der anderen Seite: <a href="index.html#elterngeld">Elterngeld und Elternzeit bei der TK</a></p></div>
+</section>
+<section id="grundregel">
+<h2>Die Grundregel</h2>
+<p>Elterngeld ersetzt einen Teil des wegfallenden Einkommens. Die drei Zahlen, die den Rahmen setzen, stehen alle in § 2 des Gesetzes.</p>
+<ul class="claims">
+<li>Das Elterngeld beträgt grundsätzlich 67 Prozent des Einkommens aus Erwerbstätigkeit vor der Geburt.<a class="fn" href="#q-2">[2]</a></li>
+<li>Nach oben ist es auf 1 800 Euro im Monat begrenzt, für volle Lebensmonate ohne Einkommen aus Erwerbstätigkeit.<a class="fn" href="#q-2">[2]</a></li>
+<li>Nach unten sind es mindestens 300 Euro, auch ohne jedes Einkommen vor der Geburt.<a class="fn" href="#q-2">[2]</a></li>
+<li>Maßgeblich ist nicht das Brutto, sondern die um pauschale Abzüge für Steuern und Sozialabgaben verminderte Summe der Einkünfte.<a class="fn" href="#q-2">[2]</a></li>
+<li>Der Bemessungszeitraum sind die zwölf Kalendermonate vor dem Monat der Geburt.<a class="fn" href="#q-3">[3]</a></li>
+<li>Monate mit Mutterschaftsgeld oder Beschäftigungsverbot in der Schutzfrist bleiben dabei außen vor, zählen also nicht als Nullmonate mit.<a class="fn" href="#q-3">[3]</a></li>
+<li>Vom Bruttolohn wird zunächst ein Zwölftel des Arbeitnehmer-Pauschbetrags abgezogen, dann die Abzüge für Steuern und Sozialabgaben.<a class="fn" href="#q-4">[4]</a></li>
+<li>Sonstige Bezüge wie Weihnachts- oder Urlaubsgeld bleiben unberücksichtigt, erhöhen das Elterngeld also nicht.<a class="fn" href="#q-4">[4]</a></li>
+<li>Als Steuern werden Einkommensteuer, Solidaritätszuschlag und, bei Kirchensteuerpflicht, die Kirchensteuer abgezogen, berechnet nach einem amtlichen Programmablaufplan und nicht nach der Lohnsteuer auf der eigenen Abrechnung.<a class="fn" href="#q-5">[5]</a></li>
+<li>Die Sozialabgaben werden mit festen Pauschalen abgezogen: 9 Prozent für Kranken- und Pflegeversicherung, 10 Prozent für die Rentenversicherung und 2 Prozent für die Arbeitsförderung, jeweils nur bei Versicherungspflicht.<a class="fn" href="#q-6">[6]</a></li>
+<li>Deshalb weicht das für das Elterngeld maßgebliche Netto vom Netto der Gehaltsabrechnung ab: es wird mit Pauschalen gebildet, nicht mit den tatsächlichen Beiträgen.<a class="fn" href="#q-6">[6]</a></li>
+</ul>
+<div class="note"><h3>Warum hier keine Berechnung des Nettoeinkommens steht</h3><p>Das für das Elterngeld maßgebliche Nettoeinkommen ist nicht der Betrag, der auf der Gehaltsabrechnung als Netto steht. Es wird nach den §§ 2c bis 2f mit pauschalen Abzügen gebildet, hängt von der Steuerklasse ab und lässt Einmalzahlungen außer Betracht. Diese Seite rechnet es deshalb nicht aus, sondern nimmt es als Eingabe. Wer eine belastbare Zahl braucht, bekommt sie von der Elterngeldstelle, nicht von einer Zusammenfassung.</p></div>
+</section>
+<section id="prozentsatz">
+<h2>Der Prozentsatz ist nicht immer 67 Prozent</h2>
+<p>Der Satz ist beweglich und hängt vom Einkommen vor der Geburt ab. Er steigt bei kleinen Einkommen und sinkt bei größeren, jeweils in Stufen von 0,1 Prozentpunkten je 2 Euro.</p>
+<ul class="claims">
+<li>Unter 1 000 Euro steigt der Satz von 67 Prozent um 0,1 Prozentpunkte je 2 Euro Abstand, bis auf 100 Prozent.<a class="fn" href="#q-2">[2]</a></li>
+<li>Über 1 200 Euro sinkt er um 0,1 Prozentpunkte je 2 Euro Abstand, bis auf 65 Prozent.<a class="fn" href="#q-2">[2]</a></li>
+<li>Zwischen 1 000 und 1 200 Euro bleibt es bei 67 Prozent, weil beide Regeln dort nicht greifen.<a class="fn" href="#q-2">[2]</a></li>
+<li>Wer nach der Geburt weiter etwas verdient, bekommt den Satz nicht auf das volle frühere Einkommen, sondern auf den Unterschied zwischen vorher und nachher.<a class="fn" href="#q-2">[2]</a></li>
+<li>Bei dieser Differenz zählt das Einkommen vor der Geburt höchstens mit 2 770 Euro. Diese Deckelung wird leicht übersehen und ändert das Ergebnis für alle, die darüber verdient haben.<a class="fn" href="#q-2">[2]</a></li>
+</ul>
+<div class="rechnung"><h3>Eigene Berechnung, nicht zitiert</h3><p>Diese Tabelle ist nicht aus einer Quelle abgeschrieben, sondern nach den oben zitierten Regeln des § 2 BEEG gerechnet. Der Rechenweg steht in <code>tools/elterngeld_rechner.py</code> und wird gegen die Rechenbeispiele des Bundes geprüft. Eingabe ist das monatliche Nettoeinkommen vor der Geburt im Sinne des Gesetzes, nicht das Brutto und nicht der Nettobetrag auf der Gehaltsabrechnung.</p><div class="scroller"><table><caption>Monatsbeträge ohne Einkommen nach der Geburt, ohne Zuschläge.</caption><thead><tr><th>Netto vor der Geburt</th><th>Satz</th><th>Basiselterngeld</th><th>Elterngeld Plus</th></tr></thead><tbody>
+<tr><td>0 Euro</td><td>100,0 %</td><td>300,00 Euro</td><td>150,00 Euro</td></tr>
+<tr><td>500 Euro</td><td>92,0 %</td><td>460,00 Euro</td><td>230,00 Euro</td></tr>
+<tr><td>800 Euro</td><td>77,0 %</td><td>616,00 Euro</td><td>308,00 Euro</td></tr>
+<tr><td>1000 Euro</td><td>67,0 %</td><td>670,00 Euro</td><td>335,00 Euro</td></tr>
+<tr><td>1200 Euro</td><td>67,0 %</td><td>804,00 Euro</td><td>402,00 Euro</td></tr>
+<tr><td>1500 Euro</td><td>65,0 %</td><td>975,00 Euro</td><td>487,50 Euro</td></tr>
+<tr><td>1800 Euro</td><td>65,0 %</td><td>1170,00 Euro</td><td>585,00 Euro</td></tr>
+<tr><td>2000 Euro</td><td>65,0 %</td><td>1300,00 Euro</td><td>650,00 Euro</td></tr>
+<tr><td>2200 Euro</td><td>65,0 %</td><td>1430,00 Euro</td><td>715,00 Euro</td></tr>
+<tr><td>2500 Euro</td><td>65,0 %</td><td>1625,00 Euro</td><td>812,50 Euro</td></tr>
+<tr><td>2770 Euro</td><td>65,0 %</td><td>1800,00 Euro</td><td>900,00 Euro</td></tr>
+<tr><td>3000 Euro</td><td>65,0 %</td><td>1800,00 Euro</td><td>900,00 Euro</td></tr>
+<tr><td>4000 Euro</td><td>65,0 %</td><td>1800,00 Euro</td><td>900,00 Euro</td></tr>
+</tbody></table></div></div>
+</section>
+<section id="varianten">
+<h2>Basiselterngeld, Elterngeld Plus und Partnerschaftsbonus</h2>
+<p>Dieselbe Berechnung, drei Bezugsformen. Wer die Monate anders verteilt, bekommt nicht mehr Geld pro Monat, sondern eine andere Streckung.</p>
+<ul class="claims">
+<li>Gemeinsam haben die Eltern Anspruch auf zwölf Monatsbeträge Basiselterngeld.<a class="fn" href="#q-7">[7]</a></li>
+<li>Zwei weitere Monate kommen hinzu, wenn bei einem Elternteil das Erwerbseinkommen in zwei Lebensmonaten gemindert ist. Das sind die Partnermonate.<a class="fn" href="#q-7">[7]</a></li>
+<li>Statt eines Monats Basiselterngeld lassen sich jeweils zwei Monate Elterngeld Plus beziehen.<a class="fn" href="#q-7">[7]</a></li>
+<li>Elterngeld Plus beträgt höchstens die Hälfte des Basiselterngeldes, das ohne Einkommen während des Bezugs zustünde. Diese Hälfte wirkt als Deckel, auch wenn die Differenzrechnung mehr ergäbe.<a class="fn" href="#q-8">[8]</a></li>
+<li>Mit dem Elterngeld Plus halbieren sich auch der Mindestbetrag, der Mindest-Geschwisterbonus und der Mehrlingszuschlag.<a class="fn" href="#q-8">[8]</a></li>
+<li>Basiselterngeld liegt damit zwischen 300 und 1 800 Euro, Elterngeld Plus und Partnerschaftsbonus zwischen 150 und 900 Euro.<a class="fn" href="#q-9">[9]</a></li>
+<li>Den Partnerschaftsbonus gibt es, wenn beide Elternteile im Durchschnitt des Lebensmonats nicht weniger als 24 und nicht mehr als 32 Wochenstunden arbeiten.<a class="fn" href="#q-10">[10]</a></li>
+<li>Er wird für 2, 3 oder 4 direkt aufeinanderfolgende Lebensmonate beantragt.<a class="fn" href="#q-11">[11]</a></li>
+<li>Die Stundenzahl muss nicht in jeder einzelnen Woche stimmen; es zählt der Monatsdurchschnitt.<a class="fn" href="#q-11">[11]</a></li>
+<li>Gleichzeitig Basiselterngeld beziehen können beide Eltern nur in einem einzigen der ersten zwölf Lebensmonate.<a class="fn" href="#q-7">[7]</a></li>
+<li>Ein Elternteil allein kann die Partnermonate ebenfalls bekommen, unter anderem wenn die Voraussetzungen für den steuerlichen Entlastungsbetrag für Alleinerziehende vorliegen und der andere Elternteil weder mit ihm noch mit dem Kind in einer Wohnung lebt.<a class="fn" href="#q-12">[12]</a></li>
+</ul>
+</section>
+<section id="zuschlaege">
+<h2>Geschwisterbonus und Mehrlingszuschlag</h2>
+<p>Zwei Zuschläge kommen auf den berechneten Betrag obendrauf. Beide stehen in § 2a und beide werden oft übersehen, weil sie nicht beantragt zu werden brauchen, sondern sich aus den Angaben im Antrag ergeben.</p>
+<ul class="claims">
+<li>Der Geschwisterbonus erhöht das Elterngeld um 10 Prozent, mindestens aber um 75 Euro.<a class="fn" href="#q-13">[13]</a></li>
+<li>Voraussetzung sind zwei Kinder im Haushalt, die noch nicht drei Jahre alt sind. Das neugeborene Kind zählt dabei mit, es genügt also ein älteres Geschwisterkind unter drei.<a class="fn" href="#q-13">[13]</a></li>
+<li>Alternativ genügen drei oder mehr Kinder, die noch nicht sechs Jahre alt sind.<a class="fn" href="#q-13">[13]</a></li>
+<li>Bei Mehrlingen kommen je 300 Euro für das zweite und jedes weitere Kind hinzu, zusätzlich zu einem etwaigen Geschwisterbonus.<a class="fn" href="#q-13">[13]</a></li>
+</ul>
+</section>
+<section id="grenzen">
+<h2>Wo der Anspruch endet und was abgezogen wird</h2>
+<p>Zwei Regeln entscheiden häufiger über den tatsächlich ausgezahlten Betrag als die Prozentrechnung: die Einkommensgrenze und die Anrechnung des Mutterschaftsgeldes.</p>
+<ul class="claims">
+<li>Der Anspruch entfällt ganz, wenn das zu versteuernde Einkommen im letzten abgeschlossenen Veranlagungszeitraum vor der Geburt über 175 000 Euro lag.<a class="fn" href="#q-14">[14]</a></li>
+<li>Bei zwei berechtigten Personen zählt die Summe beider zu versteuernden Einkommen gegen dieselbe Grenze von 175 000 Euro.<a class="fn" href="#q-14">[14]</a></li>
+<li>Mutterschaftsgeld und der Arbeitgeberzuschuss dazu werden für die Zeit ab dem Tag der Geburt auf das Elterngeld angerechnet.<a class="fn" href="#q-15">[15]</a></li>
+<li>Auch Elterngeld für ein älteres Kind wird angerechnet.<a class="fn" href="#q-15">[15]</a></li>
+</ul>
+<div class="note"><h3>Die Einkommensgrenze hat keine Gleitzone</h3><p>Das Gesetz kennt hier keinen Übergangsbereich: entweder liegt das zu versteuernde Einkommen über der Grenze, dann entfällt der Anspruch ganz, oder es liegt darunter. Maßgeblich ist das zu versteuernde Einkommen aus dem Steuerbescheid, nicht das Brutto und nicht das für die Höhe des Elterngeldes maßgebliche Nettoeinkommen. Es sind also zwei verschiedene Einkommensbegriffe im selben Gesetz, und sie werden regelmäßig verwechselt.</p></div>
+</section>
+<section id="antrag">
+<h2>Antrag und Fristen</h2>
+<p>Die einzige Frist, die auf dieser Seite wirklich Geld kostet, ist die Rückwirkung. Wer zu spät beantragt, verliert die Monate davor endgültig.</p>
+<ul class="claims">
+<li>Elterngeld wird rückwirkend nur für die letzten drei Lebensmonate vor dem Monat der Antragstellung gezahlt.<a class="fn" href="#q-16">[16]</a></li>
+<li>Die Elterngeldstelle sagt dasselbe: höchstens drei Lebensmonate rückwirkend.<a class="fn" href="#q-1">[1]</a></li>
+<li>Der Antrag ist schriftlich zu stellen.<a class="fn" href="#q-16">[16]</a></li>
+<li>Einmal getroffene Entscheidungen lassen sich bis zum Ende des Bezugszeitraums noch ändern.<a class="fn" href="#q-16">[16]</a></li>
+</ul>
+<div class="note"><h3>Was diese Seite nicht leistet</h3><p>Sie gibt die Rechenregeln wieder, nicht den Einzelfall. Nicht behandelt sind unter anderem: die Ermittlung des Nettoeinkommens nach den §§ 2c bis 2f, Selbstständigkeit mit ihrem abweichenden Bemessungszeitraum, Frühgeburten mit zusätzlichen Monaten, Teilzeit während des Bezugs im Detail, sowie alles, was mit Steuerklassenwahl zu tun hat. Verbindlich ist allein der Bescheid der Elterngeldstelle.</p></div>
+</section>
+<section id="quellen"><h2>Quellen</h2><p>16 amtliche Quellen: das Gesetz, das Familienportal des Bundes und die L-Bank als Elterngeldstelle, abgerufen am 27.07.2026 und als Kopie archiviert. Jede Angabe oben verweist mit ihrer Nummer auf den Eintrag hier. Die Adressen stehen als Text und nicht als Link, damit diese Seite keine Verbindung zu fremden Servern aufbaut.</p><ol class="quellen">
+<li id="q-1">Zuständigkeit, Antragsweg und Kontakt der Elterngeldstelle. <span class="meta">L-Bank, Elterngeldstelle Baden-Württemberg, www.l-bank.de/produkte/familienfoerderung/elterngeld.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-2">Höhe des Elterngeldes, Prozentsätze, Mindest- und Höchstbetrag. <span class="meta">Bundesministerium der Justiz, BEEG § 2, www.gesetze-im-internet.de/beeg/__2.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-3">Bemessungszeitraum. <span class="meta">Bundesministerium der Justiz, BEEG § 2b, www.gesetze-im-internet.de/beeg/__2b.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-4">Einkommen aus nichtselbständiger Erwerbstätigkeit. <span class="meta">Bundesministerium der Justiz, BEEG § 2c, www.gesetze-im-internet.de/beeg/__2c.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-5">Abzüge für Steuern. <span class="meta">Bundesministerium der Justiz, BEEG § 2e, www.gesetze-im-internet.de/beeg/__2e.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-6">Abzüge für Sozialabgaben. <span class="meta">Bundesministerium der Justiz, BEEG § 2f, www.gesetze-im-internet.de/beeg/__2f.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-7">Bezugszeitraum und Aufteilung der Elterngeldmonate. <span class="meta">Bundesministerium der Justiz, BEEG § 4, www.gesetze-im-internet.de/beeg/__4.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-8">Elterngeld Plus. <span class="meta">Bundesministerium der Justiz, BEEG § 4a, www.gesetze-im-internet.de/beeg/__4a.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-9">Erläuterung der Höhe von Basiselterngeld und ElterngeldPlus. <span class="meta">Familienportal des Bundes, familienportal.de/familienportal/familienleistungen/elterngeld/faq/wie-viel-elterngeld-kann-ich-bekommen--124616, abgerufen am 27.07.2026.</span></li>
+<li id="q-10">Partnerschaftsbonus. <span class="meta">Bundesministerium der Justiz, BEEG § 4b, www.gesetze-im-internet.de/beeg/__4b.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-11">Erläuterung des Partnerschaftsbonus. <span class="meta">Familienportal des Bundes, familienportal.de/familienportal/familienleistungen/elterngeld/faq/was-ist-der-partnerschaftsbonus--155198, abgerufen am 27.07.2026.</span></li>
+<li id="q-12">Alleiniger Bezug durch einen Elternteil. <span class="meta">Bundesministerium der Justiz, BEEG § 4c, www.gesetze-im-internet.de/beeg/__4c.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-13">Geschwisterbonus und Mehrlingszuschlag. <span class="meta">Bundesministerium der Justiz, BEEG § 2a, www.gesetze-im-internet.de/beeg/__2a.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-14">Anspruch und Einkommensgrenze. <span class="meta">Bundesministerium der Justiz, BEEG § 1, www.gesetze-im-internet.de/beeg/__1.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-15">Anrechnung von Mutterschaftsleistungen. <span class="meta">Bundesministerium der Justiz, BEEG § 3, www.gesetze-im-internet.de/beeg/__3.html, abgerufen am 27.07.2026.</span></li>
+<li id="q-16">Antragstellung und rückwirkende Zahlung. <span class="meta">Bundesministerium der Justiz, BEEG § 7, www.gesetze-im-internet.de/beeg/__7.html, abgerufen am 27.07.2026.</span></li>
+</ol></section>
+</main>
+<footer class="foot">
+<p>Diese Seite gibt Regeln des Bundeselterngeld- und Elternzeitgesetzes wieder und stützt sich sonst nur auf das Familienportal des Bundes und die L-Bank. Sie ist weder amtlich noch vollständig und ersetzt keine Beratung durch die Elterngeldstelle.</p>
+<p>Die Tabelle im Abschnitt über den Prozentsatz ist als einzige Angabe auf dieser Seite nicht zitiert, sondern selbst gerechnet. Sie ist als solche gekennzeichnet.</p>
+</footer>
+</div>
+</div>
+</body>
+</html>
